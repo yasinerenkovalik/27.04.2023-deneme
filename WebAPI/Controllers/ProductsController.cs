@@ -26,6 +26,7 @@ namespace WebAPI.Controllers
             if (result.success)
             {
                 return Ok(result.Data);
+                //datayı ekrana yazdırır
             }
             return BadRequest(result.message);
             
