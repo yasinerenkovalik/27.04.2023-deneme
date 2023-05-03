@@ -33,11 +33,12 @@ namespace Core.DataAccess.EntitiyFreamwork
             }
         }
 
+      
         public TEntitiy Get(Expression<Func<TEntitiy, bool>> filter)
         {
             using (TContext context = new TContext())
             {
-                return context.Set<TEntitiy>().SingleOrDefault(filter);
+                return context.Set<TEntitiy>().FirstOrDefault(filter);
             }
         }
 

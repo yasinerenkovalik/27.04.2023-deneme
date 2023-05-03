@@ -40,14 +40,18 @@ namespace Bussines.Concrete
 
         public IDataResult<List<Product>> GetAll()
         {
-            return new SuccessDataResult<List<Product>>(_productdal.GetAll(),true,Message.ProductsList);
+            if (DateTime.Now.Hour == 21)
+            {
+                return new ErrorDataResult<List<Product>>(Message.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<Product>>(_productdal.GetAll(),Message.ProductsList);
         }
 
 
         public IDataResult <List<Product>> GetAllByCategory(int id)
         {
     
-            return new SuccessDataResult<List<Product>>(_productdal.GetAll(), true, Message.ProductsList);
+            return new SuccessDataResult<List<Product>>(_productdal.GetAll(), Message.ProductsList);
         }
 
         public IDataResult<Product> GetById(int product)

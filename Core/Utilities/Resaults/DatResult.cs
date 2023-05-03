@@ -8,13 +8,15 @@ namespace Core.Utilities.Resaults
 {
     public class DatResult<T> : Result, IDataResult<T>
     {
-        public DatResult(T data,bool succes,string massage):base(succes,massage)
+
+        public DatResult(T data, bool success, string message) : base(success, message)
         {
-            
+            Data = data;
         }
-        public DatResult(T data ,bool succes):base(succes)
+
+        public DatResult(T data, bool success) : base(success)
         {
-            data = data;  
+            Data = data;
         }
         public T Data { get; }
     }
