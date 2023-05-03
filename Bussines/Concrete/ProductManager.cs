@@ -1,16 +1,22 @@
 ﻿using Bussines.Abstract;
 using Bussines.Constants;
+using Bussines.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Resaults;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramwork;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOS;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Bussines.Concrete
 {
@@ -23,17 +29,12 @@ namespace Bussines.Concrete
             _productdal = productdal;
         }
 
-        public void Add()
-        {
-            throw new NotImplementedException();
-        }
 
+        [ValidationAspect(typeof(ProductValidatior))]
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length < 2)
-            {
-                return new ErrorResult(Message.ProductNameInavlind);
-            }
+        
+        
             _productdal.add(product);
             return new SuccessResult(Message.ProductAdded);
         }
