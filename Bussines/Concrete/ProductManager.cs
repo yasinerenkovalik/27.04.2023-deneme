@@ -3,6 +3,7 @@ using Bussines.Constants;
 using Bussines.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Resaults;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramwork;
@@ -23,20 +24,30 @@ namespace Bussines.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productdal;
+        ICategoryService _categoryService;
 
-        public ProductManager(IProductDal productdal)
+        public ProductManager(IProductDal productdal,
+            ICategoryService categoryService)
         {
             _productdal = productdal;
+            _categoryService = categoryService; 
         }
 
 
         [ValidationAspect(typeof(ProductValidatior))]
         public IResult Add(Product product)
         {
-        
-        
-            _productdal.add(product);
-            return new SuccessResult(Message.ProductAdded);
+            IResult resullt=BusinessRules.Run(
+                ChecIfProductNameOfExists(product.ProductName)
+                ,ChecIfProductCountOfCategory(product.CategoryId));
+
+            if (resullt != null)
+            {
+                return resullt;
+
+            }
+                  _productdal.add(product);
+                  return new SuccessResult(Message.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -70,10 +81,35 @@ namespace Bussines.Concrete
             return new SuccessDataResult<List<ProductDetailDTO>>(_productdal.GetProductDetails());
         }
 
-       
-     
+        [ValidationAspect(typeof(ProductValidatior))]
+        public IResult Update(Product product)
+        {
+           
 
-         IDataResult<List<Product>> IProductService.GetByUnitPrice(decimal min, decimal max)
+
+            _productdal.add(product);
+            return new SuccessResult(Message.ProductAdded);
+        }
+        private IResult ChecIfProductCountOfCategory(int categoryId)
+        {
+            var result = _productdal.GetAll(p => p.CategoryId == categoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Message.ProductCountOfCategory);
+            }
+            return new SuccessResult();
+        }
+        private IResult ChecIfProductNameOfExists(string productname)
+        {
+            var result = _productdal.GetAll(p => p.ProductName == productname).Any();
+            if (result)
+            {
+                return new ErrorResult(Message.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        IDataResult<List<Product>> IProductService.GetByUnitPrice(decimal min, decimal max)
         {
             throw new NotImplementedException();
         }

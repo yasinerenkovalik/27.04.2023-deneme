@@ -1,4 +1,5 @@
 ﻿using Bussines.Abstract;
+using Core.Utilities.Resaults;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -19,16 +20,24 @@ namespace Bussines.Concrete
             _categoryDal = categoryDal;
         }
 
-        public List<Category> GetAll()
+        IDataResult<List<Category>> GetAll()
         {
-            return _categoryDal.GetAll();
+            return new SuccessDataResult<List<Category>> (_categoryDal.GetAll());
         }
 
-        public Category GetById(int categoryId)
+        IDataResult<List<Category>> ICategoryService.GetAll()
         {
-            return _categoryDal.Get(c => c.CategoryId == categoryId);
+            throw new NotImplementedException();
         }
 
-      
+        IDataResult<Category> GetById(int categoryId)
+        {
+            return new SuccessDataResult<Category>(_categoryDal.Get(c => c.CategoryId == categoryId));
+        }
+
+        IDataResult<Category> ICategoryService.GetById(int categoryid)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
