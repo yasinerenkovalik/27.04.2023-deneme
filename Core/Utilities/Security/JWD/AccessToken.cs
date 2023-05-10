@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Security.JWD
 {
-    internal class AccessToken
+    public class AccessToken
     {
+        public string Toke { get; set; }
+        public DateTime Expiraiton { get; set; }
     }
 }
