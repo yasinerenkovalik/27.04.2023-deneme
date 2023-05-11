@@ -8,8 +8,8 @@ namespace Core.Utilities.Security.JWD
 {
     public class AccessToken
     {
-        public string Toke { get; set; }
-        public DateTime Expiraiton { get; set; }
+      
+        public DateTime Expiration { get; set; }
         public string Token { get; internal set; }
     }
 }
