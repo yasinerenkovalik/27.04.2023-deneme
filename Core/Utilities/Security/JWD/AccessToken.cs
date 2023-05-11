@@ -10,5 +10,6 @@ namespace Core.Utilities.Security.JWD
     {
         public string Toke { get; set; }
         public DateTime Expiraiton { get; set; }
+        public string Token { get; internal set; }
     }
 }
