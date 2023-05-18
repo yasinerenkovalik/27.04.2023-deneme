@@ -1,5 +1,6 @@
 ﻿using Bussines.Constants;
 using Castle.DynamicProxy;
+using Core.Extensions;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IOC;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ namespace Bussines.BusinessAspects.Autofact
                     return;
                 }
             }
-            throw new Exception(Messages.AuthorizationDenied);
+            throw new Exception(Message.AuthorizationDenied);
         }
     }
 }
