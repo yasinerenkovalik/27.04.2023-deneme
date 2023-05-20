@@ -5,6 +5,9 @@ using Autofac.Extensions.DependencyInjection;
 using Bussines.Abstract;
 using Bussines.Concrete;
 using Bussines.DependencyResolvers.Autofac;
+using Core.DependencyReselvers;
+using Core.Extensions;
+using Core.Utilities.IOC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWD;
 using DataAccess.Abstract;
@@ -26,10 +29,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddSingleton<IProductService, ProductManager>();
 //builder.Services.AddSingleton<IProductDal, EfProductDal>();
-var tokenOptions = GetSection("TokenOptions").Get<TokenOptions>();
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>(); 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -41,7 +45,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
         };
+        
     });
+builder.Services.AddDependencyReselvers(new ICoreModule[]{
+    new CoreModule()
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -54,6 +63,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
